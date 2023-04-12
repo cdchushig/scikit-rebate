@@ -84,6 +84,7 @@ class ReliefF(BaseEstimator):
         self.weight_final_scores = weight_final_scores
         self.rank_absolute = rank_absolute
 
+
     #=========================================================================#
     def fit(self, X, y, weights=None):
         """Scikit-learn required: Computes the feature importance scores from the training data.
@@ -232,6 +233,9 @@ class ReliefF(BaseEstimator):
         else:
             self.top_features_ = np.argsort(self.feature_importances_)[::-1]
 
+        # Get feature importances sorted
+        self.feature_importances_sorted = self.feature_importances_[self.top_features_]
+
         return self
 
     #=========================================================================#
@@ -249,7 +253,8 @@ class ReliefF(BaseEstimator):
         if self._num_attributes < self.n_features_to_select:
             raise ValueError('Number of features to select is larger than the number of features in the dataset.')
         
-        return X[:, self.top_features_[:self.n_features_to_select]]
+        # Return additionally top_features and sorted feature importance values
+        return X[:, self.top_features_[:self.n_features_to_select]], self.top_features_, self.feature_importances_sorted
 
     #=========================================================================#
     def fit_transform(self, X, y):
